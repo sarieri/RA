@@ -1,0 +1,197 @@
+---
+title: "RA"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, results="hide")
+setwd("D:/RA")
+rm(list = ls())
+library(tidyverse)
+library(haven)
+library(foreign)
+library(gtools)
+library(data.table)
+library(readstata13)
+
+#Set Path
+
+shenpath= "D:/RA"
+
+if(dir.exists("D:/RA")){
+  setwd(shenpath)
+}
+
+
+#Data Import
+data_indi_2004 <- read.dta13(file = "individus04_diff.dta", encoding='iso-8859-1')
+data_menages_2004 <- read.dta13(file = "menages04_diff.dta", encoding='iso-8859-1')
+data_indi_2005 <- read.dta13(file = "individus05_diff.dta", encoding='iso-8859-1')
+data_menages_2005 <- read.dta13(file = "menages05_diff.dta", encoding='iso-8859-1')
+data_indi_2006 <- read.dta13(file = "individus06_diff.dta", encoding='iso-8859-1')
+data_menages_2006 <- read.dta13(file = "menages06_diff.dta", encoding='iso-8859-1')
+data_indi_2007 <- read.dta13(file = "individus07_diff.dta", encoding='iso-8859-1')
+data_menages_2007 <- read.dta13(file = "menages07_diff.dta", encoding='iso-8859-1')
+data_indi_2008 <- read.dta13(file = "individus08_diff.dta", encoding='iso-8859-1')
+data_menages_2008 <- read.dta13(file = "menages08_diff.dta", encoding='iso-8859-1')
+data_indi_2009 <- read.dta13(file = "individus09_diff.dta", encoding='iso-8859-1')
+data_menages_2009 <- read.dta13(file = "menages09_diff.dta", encoding='iso-8859-1')
+data_indi_2010 <- read.dta13(file = "individus10_diff.dta", encoding='iso-8859-1')
+data_menages_2010 <- read.dta13(file = "menages10_diff.dta", encoding='iso-8859-1')
+data_indi_2011 <- read.dta13(file = "individus11_diff.dta", encoding='iso-8859-1')
+data_menages_2011 <- read.dta13(file = "menages11_diff.dta", encoding='iso-8859-1')
+data_indi_2012 <- read.dta13(file = "individus12_diffV2.dta", encoding='iso-8859-1')
+data_menages_2012 <- read.dta13(file = "menages12_diff.dta", encoding='iso-8859-1')
+data_indi_2013 <- read.dta13(file = "individus13_diffV2.dta", encoding='iso-8859-1')
+data_menages_2013 <- read.dta13(file = "menages13_diff.dta", encoding='iso-8859-1')
+data_indi_2014 <- read.dta13(file = "individus14_diff.dta", encoding='iso-8859-1')
+data_menages_2014 <- read.dta13(file = "menages14_diff.dta", encoding='iso-8859-1')
+data_indi_2015 <- read.dta13(file = "individus15_diff.dta", encoding='iso-8859-1')
+data_menages_2015 <- read.dta13(file = "menages15_diff.dta", encoding='iso-8859-1')
+data_indi_2016 <- read.dta13(file = "individus16_diff.dta", encoding='iso-8859-1')
+data_menages_2016 <- read.dta13(file = "menages16_diff.dta", encoding='iso-8859-1')
+data_indi_2017 <- read.dta13(file = "individus17_diff.dta", encoding='iso-8859-1')
+data_menages_2017 <- read.dta13(file = "menages17_diff.dta", encoding='iso-8859-1')
+data_indi_2018 <- read.dta13(file = "individus18_diff.dta", encoding='iso-8859-1')
+data_menages_2018 <- read.dta13(file = "menages18_diff.dta", encoding='iso-8859-1')
+data_indi_2019 <- read.dta13(file = "individus19_diff.dta", encoding='iso-8859-1')
+data_menages_2019 <- read.dta13(file = "menages19_diff.dta", encoding='iso-8859-1')
+
+my.list.indi=list(data_indi_2004, data_indi_2005, data_indi_2006, data_indi_2007, data_indi_2008, data_indi_2009, data_indi_2010, data_indi_2011, data_indi_2012, data_indi_2013, data_indi_2014, data_indi_2015, data_indi_2016, data_indi_2017, data_indi_2018, data_indi_2019)
+
+my.list.menc=list(data_menages_2004, data_menages_2005, data_menages_2006, data_menages_2007, data_menages_2008, data_menages_2009, data_menages_2010, data_menages_2011, data_menages_2012, data_menages_2013, data_menages_2014, data_menages_2015, data_menages_2016, data_menages_2017, data_menages_2018, data_menages_2019)
+
+
+#individual ID (indi$idindc_04)
+#household ID (indi/hh$idmenc_04)
+#location (hh$TU99)
+#gender (indi$SEXE)
+#year of birth (indi$ANAIS)
+#employment status (indi$RB210)
+#professional status (indi$PL040)
+#job change since last year (indi$PL160)
+#reason for job change (indi$PL170) ---Not available after 2014
+#most recent change in economic status (indi$PL180)
+
+#2004-2007
+#year of birth (indi$anais)
+#2013
+#Capitalization
+my.list.indi[[4]]$anais=my.list.indi[[4]]$ANAIS
+my.list.indi[[3]]$anais=my.list.indi[[3]]$ANAIS
+my.list.indi[[2]]$anais=my.list.indi[[2]]$ANAIS
+my.list.indi[[1]]$anais=my.list.indi[[1]]$ANAIS
+my.list.indi[[10]]$SEXE=my.list.indi[[10]]$sexe
+my.list.indi[[11]]$SEXE=my.list.indi[[11]]$sexe
+my.list.indi[[12]]$SEXE=my.list.indi[[12]]$sexe
+my.list.indi[[13]]$SEXE=my.list.indi[[13]]$sexe
+my.list.indi[[14]]$SEXE=my.list.indi[[14]]$sexe
+my.list.indi[[15]]$SEXE=my.list.indi[[15]]$sexe
+my.list.indi[[16]]$SEXE=my.list.indi[[16]]$sexe
+
+my.list.menc[[9]]$idmenc_12=my.list.menc[[9]]$IDMENC_12
+
+my.list.indi[[10]]$RB210=my.list.indi[[10]]$rb210
+my.list.indi[[10]]$PL040=my.list.indi[[10]]$pl040
+my.list.indi[[10]]$PL160=my.list.indi[[10]]$pl160
+my.list.indi[[10]]$PL170=my.list.indi[[10]]$pl170
+my.list.indi[[10]]$PL180=my.list.indi[[10]]$pl180
+my.list.menc[[10]]$TU99=my.list.menc[[10]]$tuu10
+
+my.list.indi[[11]]$RB210=my.list.indi[[11]]$rb210
+my.list.indi[[11]]$PL040=my.list.indi[[11]]$pl040
+my.list.indi[[11]]$PL160=my.list.indi[[11]]$pl160
+my.list.indi[[11]]$PL170=my.list.indi[[11]]$pl170
+my.list.indi[[11]]$PL180=my.list.indi[[11]]$pl180
+my.list.menc[[11]]$TU99=my.list.menc[[11]]$tuu10
+
+my.list.indi[[12]]$RB210=my.list.indi[[12]]$rb210
+my.list.indi[[12]]$PL040=my.list.indi[[12]]$pl040
+my.list.indi[[12]]$PL160=my.list.indi[[12]]$pl160
+my.list.indi[[12]]$PL170=NA
+my.list.indi[[12]]$PL180=my.list.indi[[12]]$pl180
+my.list.menc[[12]]$TU99=my.list.menc[[12]]$tuu10
+
+my.list.indi[[13]]$RB210=my.list.indi[[13]]$rb210
+my.list.indi[[13]]$PL040=my.list.indi[[13]]$pl040
+my.list.indi[[13]]$PL160=my.list.indi[[13]]$pl160
+my.list.indi[[13]]$PL170=NA
+my.list.indi[[13]]$PL180=my.list.indi[[13]]$pl180
+my.list.menc[[13]]$TU99=my.list.menc[[13]]$tuu10
+
+my.list.indi[[14]]$RB210=my.list.indi[[14]]$rb210
+my.list.indi[[14]]$PL040=my.list.indi[[14]]$pl040
+my.list.indi[[14]]$PL160=my.list.indi[[14]]$pl160
+my.list.indi[[14]]$PL170=NA
+my.list.indi[[14]]$PL180=my.list.indi[[14]]$pl180
+my.list.menc[[14]]$TU99=my.list.menc[[14]]$tuu10
+
+my.list.indi[[15]]$RB210=my.list.indi[[15]]$rb210
+my.list.indi[[15]]$PL040=my.list.indi[[15]]$pl040
+my.list.indi[[15]]$PL160=my.list.indi[[15]]$pl160
+my.list.indi[[15]]$PL170=NA
+my.list.indi[[15]]$PL180=my.list.indi[[15]]$pl180
+my.list.menc[[15]]$TU99=my.list.menc[[15]]$tuu10
+
+my.list.indi[[16]]$RB210=my.list.indi[[16]]$rb210
+my.list.indi[[16]]$PL040=my.list.indi[[16]]$pl040
+my.list.indi[[16]]$PL160=my.list.indi[[16]]$pl160
+my.list.indi[[16]]$PL170=NA
+my.list.indi[[16]]$PL180=my.list.indi[[16]]$pl180
+my.list.menc[[16]]$TU99=my.list.menc[[16]]$tuu10
+
+#2004-2005 id last digit manipulation
+#a=as.numeric(my.list.indi[[1]]$idindc_04)
+#b=as.numeric(my.list.menc[[1]]$idmenc_04)
+#class(my.list.indi[[1]]$idindc_04)
+#class(my.list.menc[[1]]$idmenc_04)
+#my.list.indi[[1]]$idindc_04=a-10*b+b
+#my.list.menc[[1]]$idmenc_04=b*0.1
+#my.list.indi[[1]]$idindc_04=as.character(my.list.indi[[1]]$idindc_04)
+#my.list.menc[[1]]$idmenc_04=as.character(my.list.menc[[1]]$idmenc_04)
+
+
+list1 = list("idindc_04", "idindc_05", "idindc_06", "idindc_07", "idindc_08", "idindc_09", "idindc_10", "idindc_11", "idindc_12", "idindc_13", "idindc_14", "idindc_15", "idindc_16", "idindc_17", "idindc_18", "idindc_19")
+list1[[1]]
+list2 = list("idmenc_04", "idmenc_05", "idmenc_06", "idmenc_07", "idmenc_08", "idmenc_09", "idmenc_10", "idmenc_11", "idmenc_12", "idmenc_13", "idmenc_14", "idmenc_15", "idmenc_16", "idmenc_17", "idmenc_18", "idmenc_19")
+list2[[1]]
+my.names=c("2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019")
+final.list=setNames(replicate(16,data.frame()),my.names)
+for (i in 1:16) {
+ my.list.indi[[i]]$year=2003+i
+ my.list.indi[[i]]=select(my.list.indi[[i]], id_ind=list1[[i]], id_hh=list2[[i]], SEXE, anais, RB210, PL040, PL160, PL170, PL180)
+ my.list.menc[[i]]=select(my.list.menc[[i]], id_hh=list2[[i]], location=TU99)
+ final.list[[i]]=left_join(my.list.indi[[i]], my.list.menc[[i]], by="id_hh")
+ final.list[[i]]$anais=as.numeric(final.list[[i]]$anais)
+}
+Panel=bind_rows(final.list, .id = "year")
+Panel$year=as.numeric(Panel$year)
+Panel$id_hh=as.numeric(Panel$id_hh)
+Panel$id_ind=as.numeric(Panel$id_ind)
+Panel=Panel%>%rename(gender=SEXE, born_year=anais, employ_status=RB210, prof_status=PL040, job_change=PL160, jobchange_reason=PL170, recent_change=PL180)
+
+```
+
+```{r echo=TRUE, results="show", warning=FALSE}
+
+my.names=c("2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018")
+match.list=setNames(replicate(15,data.frame()),my.names)
+nonmatch.list=setNames(replicate(15,data.frame()),my.names)
+names=c("2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019")
+Panel.list=setNames(replicate(16,data.frame()),names)
+
+match.matrix = mat.or.vec(15,3)
+
+for (i in 1:15) {
+    Panel.list[[i]]=Panel[which(Panel$year==i+2003), ]%>%select(id_hh)%>%distinct()
+    Panel.list[[i+1]]=Panel[which(Panel$year==i+2004), ]%>%select(id_hh)%>%distinct()
+    match.list[[i]]=semi_join(Panel.list[[i]],Panel.list[[i+1]])
+    nonmatch.list[[i]]=anti_join(Panel.list[[i]],Panel.list[[i+1]])
+    match.matrix[i,1]=as.numeric(count(match.list[[i]]))
+    match.matrix[i,2]=as.numeric(count(nonmatch.list[[i]]))
+    match.matrix[i,3]=i+2003
+}
+
+colnames(match.matrix)=c("match","nonmatch","year i to year i+1")
+
+```
